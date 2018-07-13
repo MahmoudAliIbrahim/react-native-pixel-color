@@ -50,6 +50,9 @@ RCT_EXPORT_METHOD(getHex:(NSString *)path
 }
 
 NSString * hexStringForColor( UIColor* color ) {
+    if (color == nil) {
+        return @"transparent";
+    }
     const CGFloat *components = CGColorGetComponents(color.CGColor);
     CGFloat r = components[0];
     CGFloat g = components[1];
