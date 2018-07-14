@@ -33,37 +33,6 @@ class RNPixelColorModule extends ReactContextBaseJavaModule {
         return "RNPixelColor";
     }
 
-    // @ReactMethod
-    // public void createImage(String path, int originalRotation, final Callback callback ) {
-    //     // Bitmap image;
-    //     if (path.startsWith("data:") || path.startsWith("file:")) {
-    //       this.image = ImageResizer.loadBitmapFromBase64(path);
-    //     } else {
-
-    //         try {
-    //             InputStream istr = this.context.getAssets().open(path);
-    //             this.image = BitmapFactory.decodeStream(istr);
-
-    //         } catch (IOException e) {
-    //             // handle exception
-    //             callback.invoke("Error parsing bitmap. Error: " + e.getMessage(), null);
-    //             return;
-    //         }
-    //     }
-
-    //     if (image == null) {
-    //         callback.invoke("Could not create image from given path.", null);
-    //         return;
-    //     }
-
-    //     //validate and set rotation of image
-    //     if (originalRotation != 0) {
-    //         this.image = ImageResizer.rotateImage(this.image, originalRotation);
-    //     }
-
-    //     callback.invoke(null, "load image success");
-    // }
-
     @ReactMethod
     public void getHex(String path, ReadableMap options, final Callback callback) {
 
@@ -87,10 +56,10 @@ class RNPixelColorModule extends ReactContextBaseJavaModule {
             return;
         }
 
-        //validate and set rotation of image
-        if (originalRotation != 0) {
-            this.image = ImageResizer.rotateImage(this.image, originalRotation);
-        }
+//        //validate and set rotation of image
+//        if (originalRotation != 0) {
+//            this.image = ImageResizer.rotateImage(this.image, originalRotation);
+//        }
 
         if (this.image == null) {
             callback.invoke("not have image fo get hex", null);
@@ -112,9 +81,15 @@ class RNPixelColorModule extends ReactContextBaseJavaModule {
 
         }
 
-        int color = colorAtPixel(this.image, x, y);
+        if(x > 0 && x < this.image.getWidth() &&
+                y > 0 && y < this.image.getHeight()) {
+            int color = colorAtPixel(this.image, x, y);
 
-        callback.invoke(null, colorToHexString(color));
+            callback.invoke(null, colorToHexString(color));
+
+        } else {
+            callback.invoke(null, "transparent");
+        }
     }
 
     private int colorAtPixel(Bitmap bitmap, int x, int y) {
