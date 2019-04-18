@@ -27,7 +27,7 @@ import java.util.Date;
 /**
  * Provide methods to resize and rotate an image file.
  */
-class ImageResizer {
+public class ImageResizer {
 
     private final static String BASE64_PREFIX = "data:image/";
 
@@ -228,7 +228,7 @@ class ImageResizer {
      * png: 'data:image/png;base64,iVBORw0KGgoAA...'
      * jpg: 'data:image/jpeg;base64,/9j/4AAQSkZJ...'
      */
-    private static Bitmap loadBitmapFromBase64(String imagePath) {
+    public static Bitmap loadBitmapFromBase64(String imagePath) {
         Bitmap sourceImage = null;
 
         // base64 image.  Convert to a bitmap.

@@ -3,9 +3,7 @@ package eu.crowtec.rnpixelcolor;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -16,14 +14,10 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import fr.bamlab.rnimageresizer.ImageResizer;
 
-import java.io.IOException;
-
-
 class RNPixelColorModule extends ReactContextBaseJavaModule {
     private Context context;
-    private Bitmap image;
 
-    public RNPixelColorModule(ReactApplicationContext reactContext) {
+    RNPixelColorModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.context = reactContext;
     }
@@ -36,13 +30,14 @@ class RNPixelColorModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getHex(String path, ReadableMap options, final Callback callback) {
 
+        Bitmap image;
         if (path.startsWith("data:") || path.startsWith("file:")) {
-          this.image = ImageResizer.loadBitmapFromBase64(path);
+          image = ImageResizer.loadBitmapFromBase64(path);
         } else {
 
             try {
                 InputStream istr = this.context.getAssets().open(path);
-                this.image = BitmapFactory.decodeStream(istr);
+                image = BitmapFactory.decodeStream(istr);
 
             } catch (IOException e) {
                 // handle exception
@@ -52,16 +47,6 @@ class RNPixelColorModule extends ReactContextBaseJavaModule {
         }
 
         if (image == null) {
-            callback.invoke("Could not create image from given path.", null);
-            return;
-        }
-
-//        //validate and set rotation of image
-//        if (originalRotation != 0) {
-//            this.image = ImageResizer.rotateImage(this.image, originalRotation);
-//        }
-
-        if (this.image == null) {
             callback.invoke("not have image fo get hex", null);
             return;
         }
@@ -73,17 +58,17 @@ class RNPixelColorModule extends ReactContextBaseJavaModule {
             int scaledWidth = options.getInt("width");
             int scaledHeight = options.getInt("height");
             
-            int originalWidth = this.image.getWidth();
-            int originalHeight = this.image.getHeight();
+            int originalWidth = image.getWidth();
+            int originalHeight = image.getHeight();
 
             x = (int)((double)x * ((double)originalWidth / (double)scaledWidth));
             y = (int)((double)y * ((double)originalHeight / (double)scaledHeight));
 
         }
 
-        if(x > 0 && x < this.image.getWidth() &&
-                y > 0 && y < this.image.getHeight()) {
-            int color = colorAtPixel(this.image, x, y);
+        if(x > 0 && x < image.getWidth() &&
+                y > 0 && y < image.getHeight()) {
+            int color = colorAtPixel(image, x, y);
 
             callback.invoke(null, colorToHexString(color));
 
